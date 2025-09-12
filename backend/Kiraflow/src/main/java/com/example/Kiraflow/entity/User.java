@@ -18,10 +18,22 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @PrePersist
-    public void prePersist() { if (id == null) id = UUID.randomUUID(); }
+    // NEW: password field (BCrypt hashed before saving)
+    @Column(nullable = false)
+    private String password;
 
-    private Instant createdAt = Instant.now();
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private Set<String> roles;
+
+    private Instant createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        if (id == null) id = UUID.randomUUID();
+        if (createdAt == null) createdAt = Instant.now();
+    }
 
     @OneToMany(mappedBy = "uploadedBy")
     private Set<Attachment> attachments;
