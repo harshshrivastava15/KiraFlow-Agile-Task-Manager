@@ -3,6 +3,7 @@ package com.example.Kiraflow.controller;
 import com.example.Kiraflow.dto.BoardDto;
 import com.example.Kiraflow.dto.CreateBoardRequest;
 import com.example.Kiraflow.service.BoardService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping
-    public ResponseEntity<BoardDto> create(@RequestBody CreateBoardRequest req) {
+    public ResponseEntity<BoardDto> create(@RequestBody @Valid CreateBoardRequest req) {
         return ResponseEntity.status(201).body(boardService.create(req));
     }
 

@@ -1,16 +1,15 @@
 package com.example.Kiraflow.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record CreateTaskRequest(
-        @NotNull(message = "columnId is required") UUID columnId,
+public record UpdateTaskRequest(
+        UUID columnId,
         UUID epicId,
         UUID assigneeId,
-        @NotBlank(message = "type is required") String type,
-        @NotBlank(message = "title is required") String title,
+        @NotBlank(message = "type required") String type,
+        @NotBlank(message = "title required") String title,
         String description,
         Integer storyPoints,
         String status,
