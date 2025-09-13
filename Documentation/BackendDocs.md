@@ -1,9 +1,5 @@
 # Kiraflow — Backend Reference (API · DB · Tech Stack)
 
-> Single-file developer documentation (README-style) describing endpoints, database schema, entity relationships, tech stack, run / test instructions, and examples. Drop this into `backend/Kiraflow/docs/README.md` or the repo root.
-
----
-
 # Overview
 
 **Kiraflow** is a lightweight Jira-like backend providing organizations, projects, boards, columns, tasks, epics, labels, comments, members and basic permissions.
