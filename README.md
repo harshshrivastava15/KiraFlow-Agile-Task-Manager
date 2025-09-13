@@ -44,24 +44,25 @@ See [Backend Reference](./docs/README.md) for:
   - Epic & sprint overview  
   - Task details (labels, comments, attachments)  
 
+
+
+## 🚀 Backend Deployment (AWS)
+
+Deployed on **AWS** with:
+
+* **AMI** (Spring Boot JAR + JDK 17)
+* **Auto Scaling Group (ASG)** for scaling
+* **Application Load Balancer (ALB)** for traffic
+* **RDS (MySQL)** for database
+* **Secrets Manager** for DB creds & JWT
+
+**CI/CD flow:** build JAR → bake AMI → refresh ASG → serve via ALB.
+
+All resources were later deleted to avoid charges.
+
 ---
 
-## Deployment (AWS)
-Planned deployment:
-- **Backend**:
-  - Package Spring Boot as Docker image
-  - Deploy on **AWS ECS / EC2**
-  - **AWS RDS (MySQL)** for persistence
-- **Frontend**:
-  - Build React app (`npm run build`)
-  - Deploy on **AWS S3 + CloudFront** (static hosting)  
-- **Attachments**:
-  - Store files in **AWS S3**
-  - Generate pre-signed URLs from backend  
-- **CI/CD**:
-  - GitHub Actions → push Docker image → deploy via ECS  
 
----
 
 ## Future Enhancements
 - Sprint burndown charts
