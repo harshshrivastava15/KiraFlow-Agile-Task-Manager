@@ -1,4 +1,3 @@
-// src/main/java/com/kiraflow/repository/LabelRepository.java
 package com.example.Kiraflow.repository;
 
 import com.example.Kiraflow.entity.Label;
