@@ -24,7 +24,7 @@ Below is the entity-relationship diagram (ERD):
 ---
 
 ## Backend Documentation
-See [Backend Reference](./docs/README.md) for:
+See [Backend Reference](./Documentation/README.md) for:
 - API endpoints
 - Database schema
 - Entity relationships
@@ -57,6 +57,7 @@ Deployed on **AWS** with:
 * **Secrets Manager** for DB creds & JWT
 
 **CI/CD flow:** build JAR → bake AMI → refresh ASG → serve via ALB.
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/322ce7c1-cb59-4d12-a0f9-899d57496c71" />
 
 All resources were later deleted to avoid charges.
 
