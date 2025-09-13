@@ -11,7 +11,7 @@ Kiraflow is a lightweight Jira-like project management tool with:
 ## System Architecture
 Below is the entity-relationship diagram (ERD):
 
-![Kiraflow ERD](Documentation/Untitled%20diagram%20_%20Mermaid%20Chart-2025-09-12-164923.svg)
+![Kiraflow ERD](Documentation/ER_Diagram.svg)
 
 ---
 
@@ -24,7 +24,7 @@ Below is the entity-relationship diagram (ERD):
 ---
 
 ## Backend Documentation
-See [Backend Reference](./Documentation/README.md) for:
+See [Backend Reference](./Documentation/BackendDocs.md) for:
 - API endpoints
 - Database schema
 - Entity relationships
