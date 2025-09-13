@@ -21,10 +21,14 @@ public class TaskService {
     private final ColumnRepository columnRepo;
     private final EpicRepository epicRepo;
     private final UserRepository userRepo;
+    private final PermissionService permissionService;
 
     public TaskDto create(CreateTaskRequest req) {
         ColumnEntity column = columnRepo.findById(req.columnId())
                 .orElseThrow(() -> new IllegalArgumentException("Column not found"));
+
+        UUID projectId = column.getBoard().getProject().getId();
+        permissionService.requireProjectMember(projectId);
 
         TaskEntity t = new TaskEntity();
         t.setId(UUID.randomUUID());
@@ -50,11 +54,16 @@ public class TaskService {
 
     public TaskDto getById(UUID id) {
         TaskEntity t = taskRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found"));
+        permissionService.requireProjectMember(t.getColumn().getBoard().getProject().getId());
         return map(t);
     }
 
     public List<TaskDto> listByColumn(UUID columnId) {
-        return taskRepo.findAllByColumnIdOrderByCreatedAt(columnId).stream()
+        // require membership to view
+        ColumnEntity c = columnRepo.findById(columnId).orElseThrow(() -> new IllegalArgumentException("Column not found"));
+        permissionService.requireProjectMember(c.getBoard().getProject().getId());
+
+        return taskRepo.findAllByColumn_IdOrderByCreatedAt(columnId).stream()
                 .map(this::map)
                 .collect(Collectors.toList());
     }
@@ -62,6 +71,9 @@ public class TaskService {
     @Transactional
     public TaskDto update(UUID id, UpdateTaskRequest req) {
         TaskEntity t = taskRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found"));
+        UUID projectId = t.getColumn().getBoard().getProject().getId();
+        permissionService.requireProjectMember(projectId);
+
         if (req.columnId() != null) {
             ColumnEntity c = columnRepo.findById(req.columnId()).orElseThrow(() -> new IllegalArgumentException("Column not found"));
             t.setColumn(c);
@@ -89,16 +101,24 @@ public class TaskService {
         return map(saved);
     }
 
+    @Transactional
     public void delete(UUID id) {
+        TaskEntity t = taskRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Task not found"));
+        UUID projectId = t.getColumn().getBoard().getProject().getId();
+        permissionService.requireProjectMember(projectId);
         taskRepo.deleteById(id);
     }
 
     @Transactional
     public TaskDto moveTask(UUID taskId, UUID targetColumnId, Integer newPositionIndex) {
         TaskEntity t = taskRepo.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found"));
+        UUID projectId = t.getColumn().getBoard().getProject().getId();
+        permissionService.requireProjectMember(projectId);
+
         ColumnEntity target = columnRepo.findById(targetColumnId).orElseThrow(() -> new IllegalArgumentException("Target column not found"));
         t.setColumn(target);
-        // position handling: you can implement ordering field; here we don't maintain a separate position
+
+        // note: position reindexing not implemented here; add if needed
         t.setUpdatedAt(Instant.now());
         TaskEntity saved = taskRepo.save(t);
         return map(saved);

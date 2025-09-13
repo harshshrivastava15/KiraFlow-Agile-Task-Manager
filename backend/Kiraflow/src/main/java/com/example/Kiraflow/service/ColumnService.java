@@ -20,10 +20,14 @@ import java.util.stream.Collectors;
 public class ColumnService {
     private final ColumnRepository columnRepo;
     private final BoardRepository boardRepo;
+    private final PermissionService permissionService;
 
     public ColumnDto create(CreateColumnRequest req) {
         Board board = boardRepo.findById(req.boardId())
                 .orElseThrow(() -> new IllegalArgumentException("Board not found"));
+        // require membership in project that board belongs to
+        permissionService.requireProjectMember(board.getProject().getId());
+
         ColumnEntity c = new ColumnEntity();
         c.setId(UUID.randomUUID());
         c.setTitle(req.title());
@@ -34,6 +38,8 @@ public class ColumnService {
     }
 
     public List<ColumnDto> listByBoard(UUID boardId) {
+        Board board = boardRepo.findById(boardId).orElseThrow(() -> new IllegalArgumentException("Board not found"));
+        permissionService.requireProjectMember(board.getProject().getId());
         return columnRepo.findAllByBoardIdOrderByPositionIndex(boardId).stream()
                 .map(c -> new ColumnDto(c.getId(), c.getBoard().getId(), c.getTitle(), c.getPositionIndex()))
                 .collect(Collectors.toList());
@@ -42,6 +48,7 @@ public class ColumnService {
     @Transactional
     public ColumnDto update(UUID id, UpdateColumnRequest req) {
         ColumnEntity c = columnRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Column not found"));
+        permissionService.requireProjectMember(c.getBoard().getProject().getId());
         c.setTitle(req.title());
         c.setPositionIndex(req.positionIndex());
         ColumnEntity saved = columnRepo.save(c);
@@ -49,7 +56,8 @@ public class ColumnService {
     }
 
     public void delete(UUID id) {
-        // optional: cascade or check tasks exist
+        ColumnEntity c = columnRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Column not found"));
+        permissionService.requireProjectMember(c.getBoard().getProject().getId());
         columnRepo.deleteById(id);
     }
 }

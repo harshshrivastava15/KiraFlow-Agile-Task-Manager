@@ -7,6 +7,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.validation.FieldError;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.Instant;
 import java.util.*;
@@ -45,5 +47,12 @@ public class GlobalExceptionHandler {
         ApiError error = new ApiError("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR.value(), Instant.now(), Collections.emptyMap(), req.getDescription(false));
         ex.printStackTrace(); // for dev; remove or log properly in prod
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiError> handleAccessDenied(AccessDeniedException ex, WebRequest req) {
+        ApiError error = new ApiError(ex.getMessage(), HttpStatus.FORBIDDEN.value(), Instant.now(), Collections.emptyMap(), req.getDescription(false));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 }
