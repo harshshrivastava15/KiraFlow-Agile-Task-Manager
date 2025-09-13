@@ -34,10 +34,10 @@ See [Backend Reference](./Documentation/BackendDocs.md) for:
 ---
 
 ## Frontend (React)
-- Framework: **React + Vite** (or CRA)  
-- State management: **Redux Toolkit** (optional, or React Query)  
-- Auth: store JWT in `localStorage` or `HttpOnly cookie`  
-- API integration: Axios or Fetch hitting `/api/...` endpoints  
+- Framework: **React + Vite** 
+- State management: **Redux Toolkit**  
+- Auth: store JWT in `HttpOnly cookie`  
+- API integration: Fetch hitting `/api/...` endpoints  
 - Planned UI:  
   - Organization / Project switcher  
   - Board view (columns & tasks as drag/drop)  
